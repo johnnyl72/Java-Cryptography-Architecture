@@ -35,7 +35,7 @@ public class MAC {
 			key = Arrays.copyOf(key, 16); 
 			secretKey = new SecretKeySpec(key, "AES");
 	    
-		} 
+		}
 		catch (NoSuchAlgorithmException e) {
 			e.printStackTrace();
 		}
@@ -62,7 +62,9 @@ public class MAC {
 		return new String(macResult);
 	}
 	public static void main(String[] args) throws UnsupportedEncodingException {
+		
+		// Code used during development phase to test fuctionality
 //		MAC m = new MAC("Hi how are you", Key);
-//	     System.out.println("MAC RESULT: \n" +m.getMACResult());
+//		System.out.println("MAC RESULT: \n" +m.getMACResult());
 	}
 }

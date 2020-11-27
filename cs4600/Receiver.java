@@ -14,12 +14,16 @@ public class Receiver {
 		// encrypted_payload = E_AESKey(m1)||E_RSAPubKVBob(AES_key)||MAC(E_AESKey(m1)||E_RSAPubKVBob(AES_key))
 		String encrypted_payload = FileReaderWriter.readFile("receiverComputer(Bob)/encryptedPayload");
 		
-		// Retrieve MAC Key from receiver's computer
+		/*
+		 *  Retrieve MAC Key from receiver's computer, we are told 
+		 *  to assume both parties know the MAC key already
+		 */
 		String MAC_Key = FileReaderWriter.readFile("receiverComputer(Bob)/MAC_Key");
 		
 		// Retrieve Receiver's RSA Private Key
 		String RSA_PrivKey = FileReaderWriter.readFile("receiverComputer(Bob)/BobPrivateKey");
 		
+		// Tokenize the encrypted data so we can properly decrypt each part
 		String[] tokens = encrypted_payload.split("seperator");
 		String Encrypted_Message = tokens[0];
 		String Encrypted_AESKey = tokens[1];
@@ -37,9 +41,10 @@ public class Receiver {
 		FileReaderWriter.writeToFile("receiverComputer(Bob)/ComputedMac", mac1.getMACResult());
 		String computed_MAC = FileReaderWriter.readFile("receiverComputer(Bob)/ComputedMac");
 		
-//		Authenticating MAC by comparing both hash result
+		// Authenticating MAC by comparing both hash result
 		if(MAC_Result.equals(computed_MAC)) {
 			System.out.println("No tampering detected during data transmission");
+			System.out.println("----------------------------------------------------");
 		}
 		else {
 			System.out.println("TAMPERING DETECTED! Possible message hijacking..exiting ");
@@ -49,12 +54,14 @@ public class Receiver {
 		// Decrypt AES Key by using RSA Receiver's Private Key
 		String AES_Key = RSA.decrypt(Encrypted_AESKey, RSA_PrivKey);
 		System.out.println("AES Key: " +AES_Key);
+		System.out.println("----------------------------------------------------");
 		
 		// Decrypt message with the AES key 
 		String message = AES.decrypt(Encrypted_Message, AES_Key);
 		System.out.println("PLAINTEXT: " +message);
+		System.out.println("----------------------------------------------------");
 		
-		// Also write decrypted message to computer
+		// Write decrypted message to computer
 		try {
 			FileReaderWriter.writeToFile("receiverComputer(Bob)/decryptedPlaintext.txt", message);
 		} catch (IOException e) {

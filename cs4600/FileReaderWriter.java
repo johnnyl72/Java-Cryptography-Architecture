@@ -8,12 +8,14 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
+// Helper class to read and write files
 public class FileReaderWriter {
 	
 	public static void writeToFile(String fileName, String key) throws IOException {
 		try(BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(System.getProperty("user.dir") + File.separator + fileName))) {
 		    bufferedWriter.write(key);
 		} catch (IOException e) {
+			System.out.println("Error with writing the file!");
 		}
 	}
 	
@@ -27,11 +29,10 @@ public class FileReaderWriter {
 		        line = bufferedReader.readLine();
 		    }
 		} catch (FileNotFoundException e) {
-		    // Exception handling
+			System.out.println("File not found!");
 		} catch (IOException e) {
-		    // Exception handling
+			System.out.println("Error with reading the file!");
 		}
-//		System.out.println("READ IN: " +str);
 		return str;
 	}
 	

@@ -24,7 +24,7 @@ public class AES {
 	        /*
 	         *	Our key will actually be the message digest to detect any modifications,
 	       	 *	the receiver will still have to enter a string password which will be 
-			 *	used to calculate a message digest then compared with this "key"
+			 *	used to calculate a message digest then compared to with this "key"
 	         */
 	        
 	        byte[] key = keyDigest.digest(keyData);

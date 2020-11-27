@@ -25,33 +25,7 @@ public class RSA {
 	PublicKey pubKey;
 	static String publicKey;
 	static String privateKey;
-    public static void main(String[] args) throws InvalidKeyException, BadPaddingException, IllegalBlockSizeException, NoSuchPaddingException, NoSuchAlgorithmException, IOException {
-    	
-    	/* 	
-    	 * Initial RSA keypair generation, not used because
-    	 * 	we are told to assume that both clients have
-    	 * 	already established the keys before hand
-    	 */
-    	RSA keyPairGenerator = new RSA();
-    	FileReaderWriter.writeToFile("publicKey", Base64.getMimeEncoder().encodeToString(keyPairGenerator.getPublicKey().getEncoded()));
-    	FileReaderWriter.writeToFile("privateKey", Base64.getMimeEncoder().encodeToString(keyPairGenerator.getPrivateKey().getEncoded()));
-    	String publicKey = Base64.getEncoder().encodeToString(keyPairGenerator.getPublicKey().getEncoded());
-    	String privateKey = Base64.getEncoder().encodeToString(keyPairGenerator.getPrivateKey().getEncoded());
-    	System.out.println("Public Key: " +publicKey);
-    	System.out.println("Private Key: " +privateKey);
-
-
-    	publicKey = FileReaderWriter.readFile("publicKey");
-    	privateKey = FileReaderWriter.readFile("privateKey");
-    	String message = FileReaderWriter.readFile("message.txt");
-    	
-        String cipherText = encrypt(message, publicKey);
-        System.out.println("Ciphertext: " +cipherText);
-        String plainText = decrypt(cipherText, privateKey);
-        System.out.println("Plaintext: " +plainText);
-    	
-	}
-    
+	
     public RSA(){
     	
         KeyPairGenerator keyGen = null;
@@ -71,9 +45,12 @@ public class RSA {
     }
 
     public static String encrypt(String data, String publicKey) throws BadPaddingException, IllegalBlockSizeException, InvalidKeyException, NoSuchPaddingException, NoSuchAlgorithmException, UnsupportedEncodingException {
+    	
+    	//Cipher will use RSA key-algorithm in ECB mode with PKCS1 Padding
     	Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
     	cipher.init(Cipher.ENCRYPT_MODE, getPublicKey(publicKey)); // getPublicKey returns a PublicKey object
     	return new String(Base64.getEncoder().encodeToString(cipher.doFinal(data.getBytes())));
+    	
     }
     
     public static PublicKey getPublicKey(String base64PublicKey) throws UnsupportedEncodingException{
@@ -81,7 +58,7 @@ public class RSA {
         PublicKey publicKey = null;
         try{
         	/*  
-        	 * base64PublicKey requires X509EncodedKeySpec to be able to convert it again to an RSA public key,
+        	 * base64PublicKey requires X509EncodedKeySpec to be able to reconstruct it to a RSA public key,
         	 * but we must first decode because is it currently base64encoded
         	 */
             X509EncodedKeySpec keySpec = new X509EncodedKeySpec(Base64.getMimeDecoder().decode(base64PublicKey.getBytes()));
@@ -98,8 +75,10 @@ public class RSA {
     }
     
     public static String decrypt(String base64data, String privateKey) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, BadPaddingException, IllegalBlockSizeException, UnsupportedEncodingException {
+
+    	//Cipher will use RSA key-algorithm in ECB mode with PKCS1 Padding
     	Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
-    	cipher.init(Cipher.DECRYPT_MODE, getPrivateKey(privateKey));
+    	cipher.init(Cipher.DECRYPT_MODE, getPrivateKey(privateKey)); //getPrivateKey returns a PrivateKey object
     	// The data we are decrypting is base64 encoded, so we have to decode it first!
     	return new String(cipher.doFinal(Base64.getMimeDecoder().decode(base64data.getBytes())));
     }
@@ -130,5 +109,30 @@ public class RSA {
     public PublicKey getPublicKey() {
         return pubKey;
     }
+    
+    public static void main(String[] args) throws InvalidKeyException, BadPaddingException, IllegalBlockSizeException, NoSuchPaddingException, NoSuchAlgorithmException, IOException {
+    	
+    	/* 	
+    	 * 	Initial RSA keypair generation, not used because
+    	 * 	we are told to assume that both clients have
+    	 * 	already established the keys before hand
+    	 */
+//    	RSA keyPairGenerator = new RSA();
+//    	FileReaderWriter.writeToFile("publicKey", Base64.getMimeEncoder().encodeToString(keyPairGenerator.getPublicKey().getEncoded()));
+//    	FileReaderWriter.writeToFile("privateKey", Base64.getMimeEncoder().encodeToString(keyPairGenerator.getPrivateKey().getEncoded()));
+//    	publicKey = Base64.getEncoder().encodeToString(keyPairGenerator.getPublicKey().getEncoded());
+//    	privateKey = Base64.getEncoder().encodeToString(keyPairGenerator.getPrivateKey().getEncoded());
+//    	publicKey = FileReaderWriter.readFile("publicKey");
+//    	privateKey = FileReaderWriter.readFile("privateKey");
+    	
+    	
+    	// Code used during development phase to test fuctionality
+//    	String message = FileReaderWriter.readFile("message.txt");
+//        String cipherText = encrypt(message, publicKey);
+//        System.out.println("Ciphertext: " +cipherText);
+//        String plainText = decrypt(cipherText, privateKey);
+//        System.out.println("Plaintext: " +plainText);
+    	
+	}
     
 }
