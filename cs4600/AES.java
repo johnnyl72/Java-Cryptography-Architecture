@@ -46,7 +46,6 @@ public class AES {
             
             // Creating a cipher using AES in ECB mode with PKCS5Padding
             Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
-            
             // Initializing the cipher to encrypt secretKey
             cipher.init(Cipher.ENCRYPT_MODE, secretKey);
             

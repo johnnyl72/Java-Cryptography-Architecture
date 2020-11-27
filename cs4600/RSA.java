@@ -35,7 +35,7 @@ public class RSA {
 			System.out.println("Failed to instantiate key pair generator");
 			e.printStackTrace();
 		}
-        keyGen.initialize(1024);
+        keyGen.initialize(2048);
         KeyPair pair = keyGen.generateKeyPair();
         // Private key is generated in PKCS#8 format
         this.prKey = pair.getPrivate();
